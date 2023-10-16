@@ -114,3 +114,6 @@ DEPENDENCIES
 
 BUNDLED WITH
    2.2.16
+
+gem install bundler:2.2.16
+
