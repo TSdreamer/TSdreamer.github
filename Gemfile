@@ -34,3 +34,7 @@ gem "jekyll-theme-chirpy"
 
 # for ci
 gem 'html-proofer'
+
+# for configuration
+gem "jekyll-theme-chirpy", "~> VERSION"
+
