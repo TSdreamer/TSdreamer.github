@@ -4,20 +4,25 @@ title: "Before I do anything on Proxmox, I do this first..."
 date: 2020-11-28 09:00:00 -0500
 categories: proxmox
 tags: homelab proxmox homelab
+image:
+  path: /assets/img/headers/engine-start.webp
+  lqip: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAAUACgMBEQACEQEDEQH/xAGiAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgsQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+gEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoLEQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP4M9KvNPs9C12C60xr24vo0js7kXS24sZYyg82SI2k73IHnbkjhnsSGX99JPGRGuFSlOdWjUjXnTjSbc6cVeNVO2ktV57qVt4cktX72BzLA4PLc1wFfJsHjsTmMaMcLmNeUliMsdNycpYdKLbcnJP3KlBS5eXEfWafLThydbngn/9k=
+
 ---
 
-[![Before I do anything on Proxmox, I do this first...](https://img.youtube.com/vi/GoZaMgEgrHw/0.jpg)](https://www.youtube.com/watch?v=GoZaMgEgrHw "Before I do anything on Proxmox, I do this first...")
+After setting up my Proxmox servers, there are a few things I do before I use them for their intended purpose.This ranges from updates, to storage, to networking and VLANS, to uploading ISOs, to clustering, and more.Join me as we pick up where the rest of the proxmox tutorials stop, and that's everything you need to do to make these production ready (and maybe a bonus item too).
 
-After setting up my Proxmox servers, there are a few thigns I do before I use them for their intended purpose.  This ranges from updates, to storage, to networking and VLANS, to uploading ISOs, to clustering, and more.  Join me as we pick up where the rest of the proxmox tutorials stop, and that's everything you need to do to make these production ready (and maybe a bonus item too).
+{% include embed/youtube.html id='GoZaMgEgrHw' %}
 
-
-[Watch Video](https://www.youtube.com/watch?v=GoZaMgEgrHw)
-
+📺 [Watch Video](https://www.youtube.com/watch?v=GoZaMgEgrHw)
 
 ## Updates
+
 Edit `/etc/apt/sources.list`
 
-```
+### Proxmox Version 6.X
+
+```bash
 deb http://ftp.us.debian.org/debian buster main contrib
 
 deb http://ftp.us.debian.org/debian buster-updates main contrib
@@ -29,13 +34,39 @@ deb http://security.debian.org buster/updates main contrib
 deb http://download.proxmox.com/debian buster pve-no-subscription
 ```
 
+### Proxmox Version 7.X
+
+(for a full guide on Proxmox 7, please [see this link](/posts/proxmox-7/))
+
+```bash
+deb http://ftp.debian.org/debian bullseye main contrib
+
+deb http://ftp.debian.org/debian bullseye-updates main contrib
+
+# security updates
+deb http://security.debian.org/debian-security bullseye-security main contrib
+
+# PVE pve-no-subscription repository provided by proxmox.com,
+# NOT recommended for production use
+deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
+```
 
 Edit `/etc/apt/sources.list.d/pve-enterprise.list`
 
-```
+```bash
 # deb https://enterprise.proxmox.com/debian/pve buster pve-enterprise
 ```
 
+### Proxmox Version 8.X
+
+Create a file at `/etc/apt/sources.list.d/pve-no-enterprise.list` with the following contents:
+
+```bash
+# not for production use
+deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
+```
+
+_If you're looking to upgrade to Proxmox 8, [see this post](/posts/upgrade-proxmox-to-8/)_
 
 Run
 
@@ -53,8 +84,7 @@ reboot
 
 ## Storage
 
-
-BE CAREFUL.  This will wipe your disks.
+BE CAREFUL.This will wipe your disks.
 
 ```bash
 fdisk /dev/sda
@@ -72,24 +102,34 @@ smartctl -a /dev/sda
 
 See [Proxmox PCI Passthrough](https://pve.proxmox.com/wiki/Pci_passthrough)
 
-`nano /etc/default/grub`
+`nano /etc/kernel/cmdline`
 
-```
-GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
-```
+add `intel_iommu=on iommu=pt` to the end of this line without line breaks
 
-`update-grub`
+```bash
+root=ZFS=rpool/ROOT/pve-1 boot=zfs intel_iommu=on iommu=pt
+```
 
 Edit `/etc/modules`
 
-```
+```bash
 vfio
 vfio_iommu_type1
 vfio_pci
 vfio_virqfd
 ```
 
-`reboot`
+run
+
+```bash
+update-initramfs -u -k all
+```
+
+then reboot
+
+```bash
+reboot
+```
 
 ## VLAN Aware
 
@@ -100,7 +140,8 @@ nano /etc/network/interfaces
 ```
 
 Set your VLAN here
-```
+
+```bash
 bridge-vlan-aware yes
 bridge-vids 20
 ```
@@ -111,7 +152,7 @@ bridge-vids 20
 nano /etc/network/interfaces
 ```
 
-```
+```conf
 auto eno1
 iface eno1 inet manual
 
@@ -137,9 +178,13 @@ iface vmbr0 inet static
 #lacp nic team
 ```
 
+**If you're running Proxmox 7, see the modified [config here](/posts/proxmox-7/) for LAGG / LACP**
+
 ## Cloning
 
 These are the commands I run after cloning a Linux machine so that it resets all information for the machine it was cloned from.
+
+(Note: If you use cloud-init-aware OS images as described under *Cloud-Init Support* on <https://pve.proxmox.com/pve-docs/chapter-qm.html>, these steps won't be necessary!)
 
 change hostname
 
@@ -160,10 +205,9 @@ sudo nano /etc/hosts
 reset machine ID
 
 ```bash
-sudo rm /etc/machine-id
-sudo rm /var/lib/dbus/machine-id
-sudo truncate -s 0 /etc/machine-id
-sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
+rm -f /etc/machine-id /var/lib/dbus/machine-id
+dbus-uuidgen --ensure=/etc/machine-id
+dbus-uuidgen --ensure
 ```
 
 regenerate ssh keys
@@ -172,8 +216,16 @@ regenerate ssh keys
 regen ssh keys
 sudo rm /etc/ssh/ssh_host_*
 sudo dpkg-reconfigure openssh-server
-
 ```
 
-
 reboot
+
+## Alerts
+
+I've added yet another item to my list when setting up a new Proxmox server, and [that's setting up alerts!](/posts/proxmox-alerts/)
+
+## Links
+
+⚙️ See all the hardware I recommend at <https://l.technotim.live/gear>
+
+🚀 Don't forget to check out the [🚀Launchpad repo](https://l.technotim.live/quick-start) with all of the quick start source files

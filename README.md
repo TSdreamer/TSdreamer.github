@@ -1,13 +1,21 @@
 <h1 align="center">:wave: Hi, I'm Haotian (Kirin) MA  </h1>
 
+<<<<<<< HEAD
+=======
+Here you will find all the documentation for my YouTube videos on my channel [https://www.youtube.com/technotimlive](https://l.technotim.live/subscribe)
+>>>>>>> 999fefbe821705d0c7c517f02ac931ff7eead77b
 
 <div  align="center">    
 
+<<<<<<< HEAD
 [![](https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/htma/) 
 [![](https://img.shields.io/badge/twitter-%230077B5.svg?&style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/mahaotian10) 
 <a href="https://github.com/TSdreamer/TSdreamer/blob/main/Haotian (Kirin) Ma_2023.07.pdf" target="blank"><img src="https://img.shields.io/badge/Portfolio_-000?style=for-the-badge&logo=ko-fi&logoColor=gold" alt="krishna__keshav" /></a> 
 <a href="mailto:HaotianTeemo@outlook.com" target="blank"><img src="https://img.shields.io/badge/Reach_to_me_via_Mail_-000?style=for-the-badge&logo=gmail&logoColor=pink" alt="Mail" /></a> 
 </div>
+=======
+## Documentation has moved here 👉 [The new documentation site](https://l.technotim.live/docs)
+>>>>>>> 999fefbe821705d0c7c517f02ac931ff7eead77b
 
 
 <div style="display: flex; justify-content: space-between; align-items: flex-end;">
@@ -15,6 +23,7 @@
   <img src="https://i.imgur.com/JlXPELW.jpg" width="400" /> 
 </div>
 
+<<<<<<< HEAD
 
 - **Personal Statement** : I'm a passionate **Ph.D. Candidate** in **Engineering**, specializing in **Machine Learning**, **Dynamical Energy Modelling**, and **Electrochemisitry Modelling**.
 
@@ -162,4 +171,20 @@
 
 <!--   profile-green-animate -->
 ![](./profile-green-animate.svg)
+=======
+► YouTube <https://l.technotim.live/subscribe>
 
+► Patreon <https://l.technotim.live/patreon>
+
+► Twitch <https://l.technotim.live/twitch>
+
+► Twitter  <https://l.technotim.live/twitter>
+
+► Discord <https://l.technotim.live/discord>
+
+► Instagram <https://l.technotim.live/instagram>
+
+► Facebook <https://l.technotim.live/facebook>
+>>>>>>> 999fefbe821705d0c7c517f02ac931ff7eead77b
+
+► GitHub <https://l.technotim.live/github>
